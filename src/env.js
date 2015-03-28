@@ -1,47 +1,42 @@
 define(["underscore", "src/util", "src/eval"], function(_, util, e) {
-  return {
-    "apply": function(func, list) { // call the func with the list as its args
-      return e.call(this, [func].concat(list));
-    },
-    "eval": function(form) { // evaluate a list as if it's an s-expr
-      return e.call(this, form);
-    },
+  var defaultEnv = {
     "def": function (name, val) { // define a symbol
       this[name.val] = e.call(this, val) || [];
       return [];
     },
-    "fn": function (params, body) { // a function literal
-      var newScope = _.clone(this);
-      return function() {
-        var vals = [].slice.call(arguments);
-        for (var i = 0; i < params.length; i++) {
-          newScope[params[i]] = e.call(this, vals[i]);
-        }
-        e.call(body);
-      };
-    },
     "defn": function (name, params, body) {
-      var newScope = _.clone(this);
+      var newScope = Object.create(this);
       this[name.val] = function() {
         var vals = [].slice.call(arguments);
-        for (var i = 0; i < params.length; i++) {
-          newScope[params[i]] = e.call(this, vals[i]);
-        }
-        e.call(body);
+        params.forEach(function(param, i) {
+          newScope[param.val] = e.call(newScope, vals[i]);
+        });
+        return e.call(newScope, body);
       };
+      return [];
     },
     "defmacro": function (name, params, body) {
-      var newScope = _.clone(this);
+      var newScope = Object.create(this);
       this[name.val] = function() {
         var vals = [].slice.call(arguments);
-        for (var i = 0; i < params.length; i++) {
-          newScope[params[i]] = vals[i];
-        }
-        e.call(body);
+        params.forEach(function(param, i) {
+          newScope[param.val] = vals[i];
+        });
+        return e.call(newScope, body);
       };
+      return [];
     },
     "quote": function(form) { // return the argument unevaluated.
-      return form || nil;
+      return form || [];
+    },
+    "let": function(bindings, body) {
+      var env = Object.create(this);
+      bindings.forEach(function (binding) {
+        var sym = binding[0];
+        var val = e.call(env, binding[1]);
+        env[sym.val] = val;
+      });
+      return e.call(env, body);
     },
     // Arithmetic operators
     "+": function () {
@@ -50,7 +45,7 @@ define(["underscore", "src/util", "src/eval"], function(_, util, e) {
       return args.map(function(x) {
         return e.call(env, x);
       }).reduce(function (a, b) {
-        return (a + b) || nil;
+        return (a + b) || [];
       });
     },
     "-": function () {
@@ -59,7 +54,7 @@ define(["underscore", "src/util", "src/eval"], function(_, util, e) {
       return args.map(function(x) {
         return e.call(env, x);
       }).reduce(function (a, b) {
-        return (a - b) || nil;
+        return (a - b) || [];
       });
     },
     "*": function () {
@@ -68,7 +63,7 @@ define(["underscore", "src/util", "src/eval"], function(_, util, e) {
       return args.map(function(x) {
         return e.call(env, x);
       }).reduce(function (a, b) {
-        return (a * b) || nil;
+        return (a * b) || [];
       });
     },
     "/": function () {
@@ -77,7 +72,7 @@ define(["underscore", "src/util", "src/eval"], function(_, util, e) {
       return args.map(function(x) {
         return e.call(env, x);
       }).reduce(function (a, b) {
-        return (a / b) || nil;
+        return (a / b) || [];
       });
     },
     "%": function () {
@@ -86,7 +81,7 @@ define(["underscore", "src/util", "src/eval"], function(_, util, e) {
       return args.map(function(x) {
         return e.call(env, x);
       }).reduce(function (a, b) {
-        return (a % b) || nil;
+        return (a % b) || [];
       });
     },
     "++": function (x) {
@@ -140,53 +135,93 @@ define(["underscore", "src/util", "src/eval"], function(_, util, e) {
     },
     "len": function(list) {
       return (list instanceof Array) ? list.length : 0;
+    },
+    // tests
+    "=": function eq() {
+      function equal(a, b) {
+        if (a instanceof Array && b instanceof Array) {
+          if (a.length !== b.length) {
+            return false;
+          }
+          if (util.isNil(a)) {
+            return true;
+          }
+          return equal(util.first(a), util.first(b)) &&
+            equal(util.rest(a), util.rest(b));
+        }
+        return a === b;
+      }
+      var args = [].slice.call(arguments);
+      var a = args.shift();
+      a = e.call(this, a);
+      return args.map(function(b) {
+        return equal(a, e.call(this, b));
+      }).reduce(function(a, b) {
+        return a && b;
+      });
+    },
+    "nil?": function(form) {
+      return util.isNil(e.call(this, form));
+    },
+    "list?": function(form) {
+      return util.isList(e.call(this, form));
+    },
+    "atom?": function(form) {
+      return !util.isList(e.call(this, form));
+    },
+    "zero?": function(form) {
+      return e.call(this, form) === 0;
+    },
+    // control structures
+    "if": function(cond, then, other) {
+      return e.call(this, cond) ? e.call(this, then) : e.call(this, other);
+    },
+    "cond": function() {
+      var args = [].slice.call(arguments);
+      var current;
+      while (args.length > 0) {
+        current = args.shift();
+        if (!util.isList(current) || current.length !== 2) { return nil; }
+        if (e.call(this, current[0])) {
+          return e.call(this, current[2]);
+        }
+      }
+      return [];
+    },
+    // function stuff
+    "fn": function (params, body) { // a function literal
+      var newScope = Object.create(this);
+      return function() {
+        var vals = [].slice.call(arguments);
+        params.forEach(function(param, i) {
+          newScope[param.val] = e.call(newScope, vals[i]);
+        });
+        return e.call(newScope, body);
+      };
+    },
+    "reduce": function(func, list) {
+      return e.call(this, list).reduce(func);
+    },
+    "map": function map() {
+      var args = [].slice.call(arguments);
+      var results = [];
+      var func = args.shift();
+      args.map(e.bind(this));
+      while (_.min(args.map(function(list) {
+        return list.length;
+      })) > 0) {
+        results.push(func.apply(this, args.map(function(list) {
+          return list.shift();
+        })));
+      }
+      return results;
+    },
+    "apply": function(func, list) {
+      return e.call(this, [func].concat(list));
+    },
+    "eval": function(form) {
+      return e.call(this, form);
     }
   };
+  return Object.create(defaultEnv);
 });
-/*
-
-function conditional(cond, thenExpr, elseExpr) {
-    var eCond = evaluate(cond);
-    if (eCond && !isNil(cond)) { return evaluate(thenExpr); }
-    return evaluate(elseExpr);
-}
-
-function eq() {
-    var args = [].slice.call(arguments);
-    var a = args.shift();
-    if (a instanceof Array) { return false; }
-    return args.map(function(b) {
-        return a === b;
-    }).reduce(function(a, b) {
-        return a && b;
-    });
-}
-
-function cond() {
-    var args = [].slice.call(arguments);
-    while (args.length >= 2) {
-        var cond = args.shift();
-        var then = args.shift();
-        if (evaluate(cond)) { return evaluate(then); }
-    }
-    return nil;
-}
-
-builtins = {
-    "=" : eq,
-    "if": conditional,
-    "cond": cond,
-    "nil?": isNil,
-    "list?": isList
-};
-
-var bootstrap = "" +
-    // "(defn reduce (f l)" +
-    // "      (cond (nil? l) nil" +
-    // "            (nil? (rest l)) (first l)" +
-    // "            else (reduce f (cons (f (first l) (second l))" +
-    // "                                 (rest (rest l))))))" +
-    // "(defn atom? (val)" +
-    // "      (not (list? val)))" +
-    "";
-*/
