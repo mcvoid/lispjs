@@ -6,7 +6,7 @@ define(["underscore", "src/util", "src/eval"], function(_, util, e) {
     },
     "defn": function (name, params, body) {
       var newScope = Object.create(this);
-      this[name.val] = function() {
+      this[name.val] = newScope.recur = function() {
         var vals = [].slice.call(arguments);
         params.forEach(function(param, i) {
           newScope[param.val] = e.call(newScope, vals[i]);
@@ -17,7 +17,7 @@ define(["underscore", "src/util", "src/eval"], function(_, util, e) {
     },
     "defmacro": function (name, params, body) {
       var newScope = Object.create(this);
-      this[name.val] = function() {
+      this[name.val] = newScope.recur = function() {
         var vals = [].slice.call(arguments);
         params.forEach(function(param, i) {
           newScope[param.val] = vals[i];
@@ -116,49 +116,64 @@ define(["underscore", "src/util", "src/eval"], function(_, util, e) {
     // list operators
     "list": function() {
       var env = this;
-      return [].slice.call(arguments).map(function(i) {
-        return e.call(env, i);
+      return [].slice.call(arguments).map(function(val) {
+        return e.call(env, val);
       });
     },
     "cons": function(val, list) {
-      return [e.call(this, val)].concat(list);
+      var l = e.call(this, list);
+      return [e.call(this, val)].concat(l);
     },
     "first": function(list) {
-      return util.first(list);
+      var l = e.call(this, list);
+      return util.first(l);
     },
     "rest": function(list) {
-      return util.rest(list);
+      var l = e.call(this, list);
+      return util.rest(l);
     },
     "concat": function() {
-      var args = [].slice.call(arguments);
-      return first(args).concat.apply(rest(args));
+      var args = [].slice.call(arguments).map(e.bind(this));
+      return _.flatten(args, true);
     },
     "len": function(list) {
-      return (list instanceof Array) ? list.length : 0;
+      var l = e.call(this, list);
+      return (l instanceof Array) ? l.length : 0;
+    },
+    "range": function(start, stop, step) {
+      if (!stop) { return _.range(start); }
+      if (!step) { return _.range(start, stop); }
+      return _.range(start, stop, step);
     },
     // tests
-    "=": function eq() {
-      function equal(a, b) {
-        if (a instanceof Array && b instanceof Array) {
-          if (a.length !== b.length) {
-            return false;
-          }
-          if (util.isNil(a)) {
-            return true;
-          }
-          return equal(util.first(a), util.first(b)) &&
-            equal(util.rest(a), util.rest(b));
-        }
-        return a === b;
-      }
-      var args = [].slice.call(arguments);
+    "=": function () {
+      var args = [].slice.call(arguments).map(e.bind(this));
       var a = args.shift();
-      a = e.call(this, a);
       return args.map(function(b) {
-        return equal(a, e.call(this, b));
-      }).reduce(function(a, b) {
+        return _.isEqual(a, b);
+      }).reduce(function (a, b) {
         return a && b;
       });
+    },
+    ">": function () {
+      var env = this;
+      var args = [].slice.call(arguments).map(function (a) {
+        return e.call(env, a);
+      });
+      for (var i = 1; i < args.length; i++) {
+        if (args[i - 1] <= args[i]) { return false; }
+      }
+      return true;
+    },
+    "<": function () {
+      var env = this;
+      var args = [].slice.call(arguments).map(function (a) {
+        return e.call(env, a);
+      });
+      for (var i = 1; i < args.length; i++) {
+        if (args[i - 1] >= args[i]) { return false; }
+      }
+      return true;
     },
     "nil?": function(form) {
       return util.isNil(e.call(this, form));
@@ -177,13 +192,15 @@ define(["underscore", "src/util", "src/eval"], function(_, util, e) {
       return e.call(this, cond) ? e.call(this, then) : e.call(this, other);
     },
     "cond": function() {
+      var env = Object.create(this);
+      env["else"] = true;
       var args = [].slice.call(arguments);
       var current;
       while (args.length > 0) {
         current = args.shift();
         if (!util.isList(current) || current.length !== 2) { return nil; }
-        if (e.call(this, current[0])) {
-          return e.call(this, current[2]);
+        if (e.call(env, current[0])) {
+          return e.call(env, current[1]);
         }
       }
       return [];
@@ -191,22 +208,25 @@ define(["underscore", "src/util", "src/eval"], function(_, util, e) {
     // function stuff
     "fn": function (params, body) { // a function literal
       var newScope = Object.create(this);
-      return function() {
+      newScope.recur = function() {
         var vals = [].slice.call(arguments);
         params.forEach(function(param, i) {
           newScope[param.val] = e.call(newScope, vals[i]);
         });
         return e.call(newScope, body);
       };
+      return newScope.recur;
     },
     "reduce": function(func, list) {
-      return e.call(this, list).reduce(func);
+      var l = e.call(this, list);
+      l = l.reduce(func);
+      return l;
     },
     "map": function map() {
       var args = [].slice.call(arguments);
       var results = [];
       var func = args.shift();
-      args.map(e.bind(this));
+      args = args.map(e.bind(this));
       while (_.min(args.map(function(list) {
         return list.length;
       })) > 0) {
@@ -217,10 +237,10 @@ define(["underscore", "src/util", "src/eval"], function(_, util, e) {
       return results;
     },
     "apply": function(func, list) {
-      return e.call(this, [func].concat(list));
+      return func.apply(this, e.call(this, list));
     },
     "eval": function(form) {
-      return e.call(this, form);
+      return e.call(this, e.call(this, form));
     }
   };
   return Object.create(defaultEnv);

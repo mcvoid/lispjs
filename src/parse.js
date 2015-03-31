@@ -28,8 +28,6 @@ define(["src/util"], function (util) {
       return false;
     } else if (tok === "nil") {
       return nil;
-    } else if (tok === "else") {
-      return true;
     } else if (isSymbol(tok)) {
       return new util.Symbol(tok);
     } else if (tok === "(") {

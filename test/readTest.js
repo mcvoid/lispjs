@@ -16,8 +16,6 @@ define(["src/util", "src/read"], function(util, read) {
       expect(result).toEqual(true);
       read("false", function(val) { result = val; });
       expect(result).toEqual(false);
-      read("else", function(val) { result = val; });
-      expect(result).toEqual(true);
     });
     it("read lists", function() {
       var result;

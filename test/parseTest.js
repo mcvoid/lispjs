@@ -12,12 +12,11 @@ define(["src/util", "src/parse"], function(util, parse) {
       expect(typeof parse).toEqual("function");
     });
     it("parses primitives", function() {
-      var l = new MockLexer(["0", "-10.1", "true", "false", "else"]);
+      var l = new MockLexer(["0", "-10.1", "true", "false"]);
       expect(parse(l)).toEqual(0);
       expect(parse(l)).toEqual(-10.1);
       expect(parse(l)).toEqual(true);
       expect(parse(l)).toEqual(false);
-      expect(parse(l)).toEqual(true);
     });
     it("parses lists", function() {
       var l = new MockLexer([
