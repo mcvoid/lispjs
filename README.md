@@ -27,6 +27,9 @@ require("src/lisp", function(lisp) {
 ```
   
 ## What it doesn't support (yet)
+* Because I plan to work on it shortly
+  * `do` (sequence of expressions)
+  * `loop` (clojure-like iteration)
 * Because I need a better lexer
   * Strings
   * Maps
