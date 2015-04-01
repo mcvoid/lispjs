@@ -3,9 +3,7 @@ define([
     "src/read",
     "src/util",
     "src/env",
-    "src/bootstrap"
-], function (evaluate, read, util, env, bootstrap) {
-    bootstrap();
+], function (evaluate, read, util, env) {
     return {
         eval: evaluate.bind(env),
         read: read,
