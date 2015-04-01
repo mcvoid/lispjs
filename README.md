@@ -17,10 +17,12 @@ Lispjs is a simple lisp interpreter designed for experimental purposes.
 
 ## Usage
 ```
-var code = "((fn (n) (if (zero? n) 1 (* n (recur (-- n))))) 4)";
-lisp.read(code, function(form) {
-  var result = lisp.eval(form);
-  console.log(lisp.print(result));
+require("src/lisp", function(lisp) {
+  var code = "((fn (n) (if (zero? n) 1 (* n (recur (-- n))))) 4)";
+  lisp.read(code, function(form) {
+    var result = lisp.eval(form);
+    console.log(lisp.print(result));
+  });
 });
 ```
   
