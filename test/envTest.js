@@ -37,6 +37,7 @@ define([
   var apply = new util.Symbol("apply");
   var map = new util.Symbol("map");
   var evil = new util.Symbol("eval");
+  var doList = new util.Symbol("do");
   var a = new util.Symbol("a");
   var b = new util.Symbol("b");
   var c = new util.Symbol("c");
@@ -264,6 +265,15 @@ define([
         [cond,
           [false, 1],
           [condElse, 2]])).toEqual(2);
+    });
+
+    it("do", function() {
+      var en = Object.create(env);
+      var code = [doList, [def, a, 1], [def, b, 2], [def, c, 3], 4];
+      expect(e.call(en, code)).toEqual(4);
+      expect(en.a).toEqual(1);
+      expect(en.b).toEqual(2);
+      expect(en.c).toEqual(3);
     });
 
     it("reduce", function() {

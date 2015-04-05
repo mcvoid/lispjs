@@ -205,6 +205,15 @@ define(["underscore", "src/util", "src/eval"], function(_, util, e) {
       }
       return [];
     },
+    "do": function() {
+      var result = [];
+      var env = this;
+      var args = [].slice.call(arguments);
+      args.forEach(function(form) {
+        result = e.call(env, form);
+      });
+      return result;
+    },
     // function stuff
     "fn": function (params, body) { // a function literal
       var newScope = Object.create(this);

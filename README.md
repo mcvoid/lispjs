@@ -19,22 +19,27 @@ Lispjs is a simple lisp interpreter designed for experimental purposes.
 ```
 require("src/lisp", function(lisp) {
   var code = "((fn (n) (if (zero? n) 1 (* n (recur (-- n))))) 4)";
-  lisp.read(code, function(form) {
-    var result = lisp.eval(form);
-    console.log(lisp.print(result));
-  });
+  var form = lisp.read(code);
+  var result = lisp.eval(form);
+  console.log(lisp.print(result));
 });
 ```
-  
+Or...
+```
+require("src/lisp", function(lisp) {
+  var a = lisp.interpret("((fn (n) (if (zero? n) 1 (* n (recur (-- n))))) 4)");
+  console.log(a);
+});
+```
+
 ## What it doesn't support (yet)
-* Because I plan to work on it shortly
-  * `do` (sequence of expressions)
-  * `loop` (clojure-like iteration)
 * Because I need a better lexer
   * Strings
   * Maps
   * short quoting (using `'`)
+  * treating commas as whitespace
 * Because I need a better evaluator
   * Tail recursion (need a trampoline mechanism built-in)
+  * `loop` (clojure-like iteration)
 * Because it's low on my priority queue
   * `set!` (right now `def` can rewrite any binding in the current environment)

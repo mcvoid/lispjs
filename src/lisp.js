@@ -8,6 +8,7 @@ define([
         eval: evaluate.bind(env),
         read: read,
         print: util.toString,
-        define: env.def.bind(env)
+        define: env.def.bind(env),
+        interpret: function(s) { return print(evaluate(env, read(s))); }
     };
 });
