@@ -12,6 +12,7 @@ define(["src/util"], function (util) {
 
   return function parse(tokens) {
     var tok = tokens.next();
+
     function parseList() {
       var list = [];
       while (tokens.peek() !== ")") {
@@ -20,6 +21,11 @@ define(["src/util"], function (util) {
       tokens.next();
       return list;
     }
+
+    function parseQuote() {
+      return [new util.Symbol("quote"), parse(tokens)];
+    }
+
     if (isInt(tok) || isFloat(tok)) {
       return parseFloat(tok);
     } else if (tok === "true") {
@@ -32,6 +38,8 @@ define(["src/util"], function (util) {
       return new util.Symbol(tok);
     } else if (tok === "(") {
       return parseList();
+    } else if (tok === "'") {
+      return parseQuote();
     }
     return nil;
   };

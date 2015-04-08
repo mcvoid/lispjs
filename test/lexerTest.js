@@ -31,5 +31,13 @@ define(["src/lexer"], function(Lexer) {
       expect(l.next()).toEqual(")");
       expect(l.hasNext()).toEqual(false);
     });
+    it("Lexer tokenizes quotes", function() {
+      var l = new Lexer("'(1 2)");
+      expect(l.next()).toEqual("'");
+      expect(l.next()).toEqual("(");
+      expect(l.next()).toEqual("1");
+      expect(l.next()).toEqual("2");
+      expect(l.next()).toEqual(")");
+    });
   });
 });

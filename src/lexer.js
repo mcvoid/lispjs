@@ -9,6 +9,7 @@ define(function () {
   function tokenize(str) {
     return str.replace(/\(/g, " ( ")
       .replace(/\)/g, " ) ")
+      .replace(/\'/g, " ' ")
       .trim()
       .replace(/[ \t\n]+/g, " ")
       .split(" ")

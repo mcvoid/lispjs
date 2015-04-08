@@ -36,5 +36,9 @@ define(["src/util", "src/parse"], function(util, parse) {
       expect(parse(l)).toEqual(new util.Symbol("D01"));
       expect(parse(l)).toEqual(new util.Symbol("+-*/_?!<>=%"));
     });
+    it("parses quotes", function() {
+      var l = new MockLexer(["'", "(", 1, 2, ")"]);
+      expect(parse(l)).toEqual([new util.Symbol("quote"), [1, 2]]);
+    });
   });
 });

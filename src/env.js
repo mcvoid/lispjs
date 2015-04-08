@@ -227,14 +227,15 @@ define(["underscore", "src/util", "src/eval"], function(_, util, e) {
       return newScope.recur;
     },
     "reduce": function(func, list) {
+      var f = e.call(this, func);
       var l = e.call(this, list);
-      l = l.reduce(func);
+      l = l.reduce(f);
       return l;
     },
     "map": function map() {
       var args = [].slice.call(arguments);
       var results = [];
-      var func = args.shift();
+      var func = e.call(this, args.shift());
       args = args.map(e.bind(this));
       while (_.min(args.map(function(list) {
         return list.length;
@@ -246,7 +247,8 @@ define(["underscore", "src/util", "src/eval"], function(_, util, e) {
       return results;
     },
     "apply": function(func, list) {
-      return func.apply(this, e.call(this, list));
+      var f = e.call(this, func);
+      return f.apply(this, e.call(this, list));
     },
     "eval": function(form) {
       return e.call(this, e.call(this, form));
