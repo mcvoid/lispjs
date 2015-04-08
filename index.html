@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Lispjs by mcvoid</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Lispjs</h1>
+        <p>A lisp interpreter in JavaScript</p>
+
+        <p class="view"><a href="https://github.com/mcvoid/lispjs">View the Project on GitHub <small>mcvoid/lispjs</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/mcvoid/lispjs/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/mcvoid/lispjs/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/mcvoid/lispjs">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="lispjs" class="anchor" href="#lispjs" aria-hidden="true"><span class="octicon octicon-link"></span></a>lispjs</h1>
+
+<p>Lispjs is a simple lisp interpreter designed for experimental purposes.</p>
+
+<h2>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
+
+<ul>
+<li>A reader, printer, and evaluator</li>
+<li>Supports numbers, symbols, booleans</li>
+<li>Lexical scoping</li>
+<li>Function literals, and simple macros (functions which don't <code>eval</code> their arguments first)</li>
+<li>Supports recursion, even in anonymous functions</li>
+<li>list operations (<code>list</code>, <code>cons</code>, <code>concat</code>, <code>first</code>, <code>rest</code>)</li>
+<li>Higher-order functions (<code>map</code>, <code>reduce</code>, <code>apply</code>)</li>
+<li>An environment that can be customized with javascript</li>
+<li>Clojure-ish syntax for easier typing</li>
+<li>
+<code>eval</code> keyword (take that, ClojureScript!)</li>
+<li>Extremely simple implementation</li>
+</ul>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<pre><code>require("src/lisp", function(lisp) {
+  var code = "((fn (n) (if (zero? n) 1 (* n (recur (-- n))))) 4)";
+  var form = lisp.read(code);
+  var result = lisp.eval(form);
+  console.log(lisp.print(result));
+});
+</code></pre>
+
+<p>Or...</p>
+
+<pre><code>require("src/lisp", function(lisp) {
+  var a = lisp.interpret("((fn (n) (if (zero? n) 1 (* n (recur (-- n))))) 4)");
+  console.log(a);
+});
+</code></pre>
+
+<h2>
+<a id="what-it-doesnt-support-yet" class="anchor" href="#what-it-doesnt-support-yet" aria-hidden="true"><span class="octicon octicon-link"></span></a>What it doesn't support (yet)</h2>
+
+<ul>
+<li>Because I need a better lexer
+
+<ul>
+<li>Strings</li>
+<li>Maps</li>
+<li>short quoting (using <code>'</code>)</li>
+<li>treating commas as whitespace</li>
+</ul>
+</li>
+<li>Because I need a better evaluator
+
+<ul>
+<li>Tail recursion (need a trampoline mechanism built-in)</li>
+<li>
+<code>loop</code> (clojure-like iteration)</li>
+</ul>
+</li>
+<li>Because it's low on my priority queue
+
+<ul>
+<li>
+<code>set!</code> (right now <code>def</code> can rewrite any binding in the current environment)</li>
+</ul>
+</li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/mcvoid">mcvoid</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
