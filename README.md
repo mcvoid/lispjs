@@ -36,7 +36,6 @@ require("src/lisp", function(lisp) {
 * Because I need a better lexer
   * Strings
   * Maps
-  * short quoting (using `'`)
   * treating commas as whitespace
 * Because I need a better evaluator
   * Tail recursion (need a trampoline mechanism built-in)
