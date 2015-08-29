@@ -1,0 +1,20 @@
+{
+  "name": "voidlisp",
+  "version": "1.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mcvoid/voidlisp.git"
+  },
+  "author": {
+    "name": "Sean Wolcott",
+    "email": "mcvoid@mcvoid.org",
+    "url": "http://mcvoid.github.io"
+  },
+  "dependencies": {
+    "underscore": "1.8.3"
+  },
+  "devDependencies": {},
+  "scripts": {},
+  "main": "lisp.js"
+}
