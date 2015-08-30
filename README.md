@@ -1,6 +1,6 @@
-# lispjs
+# voidlisp
 
-Lispjs is a simple lisp interpreter designed for experimental purposes.
+voidlisp is a simple lisp interpreter designed for experimental purposes.
 
 ## Features
 * A reader, printer, and evaluator
@@ -21,11 +21,6 @@ var code = "((fn (n) (if (zero? n) 1 (* n (recur (-- n))))) 4)";
 var form = lisp.read(code);
 var result = lisp.eval(form);
 console.log(lisp.print(result));
-```
-Or...
-```
-var a = require("voidlisp").interpret("((fn (n) (if (zero? n) 1 (* n (recur (-- n))))) 4)");
-console.log(a);
 ```
 
 ## What it doesn't support (yet)

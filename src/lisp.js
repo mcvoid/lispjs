@@ -8,5 +8,4 @@ module.exports = {
   read: read,
   print: util.toString,
   define: env.def.bind(env),
-  interpret: function(s) { return print(evaluate(env, read(s))); }
 };
