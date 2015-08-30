@@ -12,9 +12,19 @@
     "url": "http://mcvoid.github.io"
   },
   "dependencies": {
-    "underscore": "1.8.3"
+    "underscore": "*"
   },
-  "devDependencies": {},
-  "scripts": {},
-  "main": "lisp.js"
+  "devDependencies": {
+    "jasmine": "^2.3.2"
+  },
+  "scripts": {
+    "test": "jasmine JASMINE_CONFIG_PATH=jasmine-config.json"
+  },
+  "main": "src/lisp.js",
+  "bugs": "https://github.com/mcvoid/voidlisp/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/npm/npm.git"
+  }
+
 }

@@ -12,24 +12,20 @@ Lispjs is a simple lisp interpreter designed for experimental purposes.
 * Higher-order functions (`map`, `reduce`, `apply`)
 * An environment that can be customized with javascript
 * Clojure-ish syntax for easier typing
-* `eval` keyword (take that, ClojureScript!)
 * Extremely simple implementation
 
 ## Usage
 ```
-require("src/lisp", function(lisp) {
-  var code = "((fn (n) (if (zero? n) 1 (* n (recur (-- n))))) 4)";
-  var form = lisp.read(code);
-  var result = lisp.eval(form);
-  console.log(lisp.print(result));
-});
+var lisp = require("voidlisp");
+var code = "((fn (n) (if (zero? n) 1 (* n (recur (-- n))))) 4)";
+var form = lisp.read(code);
+var result = lisp.eval(form);
+console.log(lisp.print(result));
 ```
 Or...
 ```
-require("src/lisp", function(lisp) {
-  var a = lisp.interpret("((fn (n) (if (zero? n) 1 (* n (recur (-- n))))) 4)");
-  console.log(a);
-});
+var a = require("voidlisp").interpret("((fn (n) (if (zero? n) 1 (* n (recur (-- n))))) 4)");
+console.log(a);
 ```
 
 ## What it doesn't support (yet)
