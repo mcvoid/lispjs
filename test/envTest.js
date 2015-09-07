@@ -35,7 +35,6 @@ var condElse = new util.Symbol("else");
 var reduce = new util.Symbol("reduce");
 var apply = new util.Symbol("apply");
 var map = new util.Symbol("map");
-var evil = new util.Symbol("eval");
 var doList = new util.Symbol("do");
 var a = new util.Symbol("a");
 var b = new util.Symbol("b");

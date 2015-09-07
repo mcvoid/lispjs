@@ -24,12 +24,12 @@ console.log(lisp.print(result));
 ```
 
 ## What it doesn't support (yet)
-* Because I need a better lexer
-  * Strings
+* Because it's next on my list
+  * String operations
   * Maps
-  * treating commas as whitespace
 * Because I need a better evaluator
   * Tail recursion (need a trampoline mechanism built-in)
   * `loop` (clojure-like iteration)
 * Because it's low on my priority queue
-  * `set!` (right now `def` can rewrite any binding in the current environment)
+  * `set!` (right now `def` can rewrite any binding in the current environment,
+    though only at the lowest level scope.)

@@ -1,6 +1,7 @@
 var _ = require("underscore");
 var util = require("./util");
 var e = require("./eval");
+var nil = [];
 
 var defaultEnv = {
   "def": function (name, val) { // define a symbol

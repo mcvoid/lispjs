@@ -1,6 +1,6 @@
 {
   "name": "voidlisp",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -12,19 +12,48 @@
     "url": "http://mcvoid.github.io"
   },
   "dependencies": {
-    "underscore": "*"
+    "underscore": "*",
+    "cmbjs": "^1.0.1"
   },
   "devDependencies": {
-    "jasmine": "^2.3.2"
+    "jasmine": "^2.3.2",
+    "jshint": "*"
   },
   "scripts": {
-    "test": "jasmine JASMINE_CONFIG_PATH=jasmine-config.json"
+    "test": "jasmine JASMINE_CONFIG_PATH=jasmine-config.json",
+    "lint": "jshint src/*.js test/*js"
   },
   "main": "src/lisp.js",
   "bugs": "https://github.com/mcvoid/voidlisp/issues",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/mcvoid/voidlisp.git"
+  "jshintConfig": {
+    "bitwise": true,
+    "camelcase": true,
+    "curly": true,
+    "eqeqeq": true,
+    "forin": true,
+    "freeze": true,
+    "immed": true,
+    "indent": 2,
+    "latedef": true,
+    "newcap": true,
+    "noarg": true,
+    "noempty": true,
+    "nonbsp": true,
+    "nonew": true,
+    "plusplus": false,
+    "quotmark": true,
+    "undef": true,
+    "unused": true,
+    "maxparams": false,
+    "maxdepth": false,
+    "maxstatements": false,
+    "maxcomplexity": false,
+    "maxlen": false,
+    "varstmt": false,
+    "esnext": true,
+    "sub": true,
+    "validthis": true,
+    "jasmine": true,
+    "node": true
   }
-
 }

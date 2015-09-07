@@ -36,12 +36,6 @@ describe("Lisp integration tests", function () {
   });
 
   it("higher order functions", function() {
-    var fn = new util.Symbol("fn");
-    var x = new util.Symbol("x");
-    var plus = new util.Symbol("+");
-    var mapfn = new util.Symbol("map");
-    var quote = new util.Symbol("quote");
-
     var m = "(map ++ '(1 2 3))";
     var f = lisp.read(m);
     expect(lisp.eval(f)).toEqual([2, 3, 4]);
