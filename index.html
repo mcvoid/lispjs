@@ -1,37 +1,40 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Lispjs by mcvoid</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <title>Lispjs by mcvoid</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>Lispjs</h1>
-        <p>A lisp interpreter in JavaScript</p>
+    <div id="container">
+      <div class="inner">
 
-        <p class="view"><a href="https://github.com/mcvoid/lispjs">View the Project on GitHub <small>mcvoid/lispjs</small></a></p>
+        <header>
+          <h1>Lispjs</h1>
+          <h2>A lisp interpreter in JavaScript</h2>
+        </header>
 
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/mcvoid/voidlisp/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/mcvoid/voidlisp/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/mcvoid/voidlisp" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
 
-        <ul>
-          <li><a href="https://github.com/mcvoid/lispjs/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/mcvoid/lispjs/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/mcvoid/lispjs">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h1>
-<a id="lispjs" class="anchor" href="#lispjs" aria-hidden="true"><span class="octicon octicon-link"></span></a>lispjs</h1>
+        <hr>
 
-<p>Lispjs is a simple lisp interpreter designed for experimental purposes.</p>
+        <section id="main_content">
+          <h1>
+<a id="voidlisp" class="anchor" href="#voidlisp" aria-hidden="true"><span class="octicon octicon-link"></span></a>voidlisp</h1>
+
+<p>voidlisp is a simple lisp interpreter designed for experimental purposes.</p>
 
 <h2>
 <a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
@@ -46,41 +49,28 @@
 <li>Higher-order functions (<code>map</code>, <code>reduce</code>, <code>apply</code>)</li>
 <li>An environment that can be customized with javascript</li>
 <li>Clojure-ish syntax for easier typing</li>
-<li>
-<code>eval</code> keyword (take that, ClojureScript!)</li>
 <li>Extremely simple implementation</li>
 </ul>
 
 <h2>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
 
-<pre><code>require("src/lisp", function(lisp) {
-  var code = "((fn (n) (if (zero? n) 1 (* n (recur (-- n))))) 4)";
-  var form = lisp.read(code);
-  var result = lisp.eval(form);
-  console.log(lisp.print(result));
-});
-</code></pre>
-
-<p>Or...</p>
-
-<pre><code>require("src/lisp", function(lisp) {
-  var a = lisp.interpret("((fn (n) (if (zero? n) 1 (* n (recur (-- n))))) 4)");
-  console.log(a);
-});
+<pre><code>var lisp = require("voidlisp");
+var code = "((fn (n) (if (zero? n) 1 (* n (recur (-- n))))) 4)";
+var form = lisp.read(code);
+var result = lisp.eval(form);
+console.log(lisp.print(result));
 </code></pre>
 
 <h2>
 <a id="what-it-doesnt-support-yet" class="anchor" href="#what-it-doesnt-support-yet" aria-hidden="true"><span class="octicon octicon-link"></span></a>What it doesn't support (yet)</h2>
 
 <ul>
-<li>Because I need a better lexer
+<li>Because it's next on my list
 
 <ul>
-<li>Strings</li>
+<li>String operations</li>
 <li>Maps</li>
-<li>short quoting (using <code>'</code>)</li>
-<li>treating commas as whitespace</li>
 </ul>
 </li>
 <li>Because I need a better evaluator
@@ -95,17 +85,20 @@
 
 <ul>
 <li>
-<code>set!</code> (right now <code>def</code> can rewrite any binding in the current environment)</li>
+<code>set!</code> (right now <code>def</code> can rewrite any binding in the current environment,
+though only at the lowest level scope.)</li>
 </ul>
 </li>
 </ul>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/mcvoid">mcvoid</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
+        </section>
+
+        <footer>
+          Lispjs is maintained by <a href="https://github.com/mcvoid">mcvoid</a><br>
+          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
   </body>
 </html>
