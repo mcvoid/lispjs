@@ -38,8 +38,10 @@
 <textarea cols=80 rows=16 id="code">
 (+ 1 2 3)
 </textarea>
+<div>
 <button id="go">Eval</button>
 <span id="result"></span>
+</div>
 <script src="bundle.js"></script>
 <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script>
@@ -57,7 +59,7 @@ $("#go").click(function(){
   var code = $("#code").val();
   var form = lisp.read(code);
   var result = lisp.eval(form);
-  $("#result").append(lisp.print(result));
+  $("#result").empty().append(lisp.print(result));
 });
 </script>
 <p>voidlisp is a simple lisp interpreter designed for experimental purposes.</p>
